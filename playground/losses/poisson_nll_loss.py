@@ -1,9 +1,9 @@
-import classic_algos.nn
+import torch.nn
 
 
-class CoxLoss(classic_algos.nn.CoxLoss):
+class PoissonNLLLoss(torch.nn.PoissonNLLLoss):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-    def forward(self, logits, labels, extras):
+    
+    def forward(self, logits, labels):
         return super().forward(logits, labels)

@@ -6,6 +6,7 @@ from .regression_metrics import (
     compute_root_mean_squared_error,
     compute_mean_absolute_error,
     compute_r2_score,
+    compute_pearsonr,
 )
 from .clustering_metrics import (
     compute_adjusted_rand_score,

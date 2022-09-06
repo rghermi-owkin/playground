@@ -23,9 +23,8 @@ def filter_genes(
     return df_exp, gene_list
 
 
-def log_scale(df, columns):
-    df.loc[:, columns] = np.log(1. + df[columns])
-    return df
+def log_scale(X):
+    return np.log(1. + X)
 
 
 def scale(df, columns, method="min_max"):
@@ -43,9 +42,9 @@ def scale(df, columns, method="min_max"):
 
 def handle_nan_values(df):
     # Remove columns with only NaN values
-    for c in df.columns:
-        if df[c].isna().sum() == len(df):
-            df[c] = ["Unknown"] * len(df)
+    #for c in df.columns:
+    #    if df[c].isna().sum() == len(df):
+    #        df[c] = ["Unknown"] * len(df)
             
     # Fill NaN values with median (cont.) or "Unknown" (cat.)
     for c in df.columns:

@@ -2,7 +2,7 @@ from typing import List
 from pathlib import Path
 import pandas as pd
 
-from target_engine_platform.constants import (
+from playground.constants import (
     TCGA_PATHS,
 )
 
@@ -67,7 +67,7 @@ def load_histo(
     Returns
     -------
     pd.DataFrame
-        Pandas dataframe with columns ["slide_id", "slide_path", "mask_path", "feature_path"].
+        Pandas dataframe with columns ["slide_id", "slide_path", "mask_path", "feature_path", "patient_id"].
         Id is "slide_id".
     """
     # Get paths
@@ -119,15 +119,6 @@ def load_histo(
     )
 
     df_histo["patient_id"] = df_histo.slide_id.apply(lambda x: x[:12])
-
-    to_keep = [
-        "slide_id",
-        "slide_path",
-        "mask_path",
-        "feature_path",
-        "patient_id",
-    ]
-    df_histo = df_histo[to_keep]
 
     return df_histo
 

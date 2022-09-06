@@ -1,7 +1,5 @@
 import torch.nn
 
-import classic_algos.nn
-
 
 class CrossEntropyLoss(torch.nn.CrossEntropyLoss):
     def __init__(self, *args, **kwargs):

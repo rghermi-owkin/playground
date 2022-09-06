@@ -4,12 +4,15 @@ import numpy as np
 import torch
 from torch.utils.data import Dataset
 
-from playground.utils import align_modalities
 from playground.data import (
     load_tcga,
-    preprocess_exp,
-    preprocess_histo,
 )
+from playground.transforms import (
+    ClinPreprocessor,
+    HistoPreprocessor,
+    ExpPreprocessor,
+)
+from playground.utils import align_modalities
 
 
 class MultimodalDataset(Dataset):
@@ -18,10 +21,25 @@ class MultimodalDataset(Dataset):
         self,
         cohort: str = "COAD",
         modalities: List = ["HISTO", "EXP"],
+        max_genes: int = 1_000,
+        scaling_method: str = "min_max",
         id: str = "patient_id",
     ):
         self.cohort = cohort
         self.modalities = modalities
+
+        self.max_genes = max_genes
+        self.scaling_method = scaling_method
+        
+        self.preprocessors = {
+            "CLIN": ClinPreprocessor(),
+            "HISTO": HistoPreprocessor(),
+            "EXP": ExpPreprocessor(
+                max_genes=self.max_genes,
+                scaling_method=self.scaling_method,
+            ),
+        }
+
         self.id = id
         
         # Load data
@@ -29,13 +47,10 @@ class MultimodalDataset(Dataset):
             cohort=self.cohort,
             modalities=self.modalities,
         )
-        
+
         # Pre-process data
-        if "HISTO" in self.modalities:
-            data["HISTO"] = preprocess_histo(data["HISTO"])
-            
-        if "EXP" in self.modalities:
-            data["EXP"] = preprocess_exp(data["EXP"])
+        for m in self.modalities:
+            data[m] = self.preprocessors[m].fit_transform(data[m])
         
         # Align modalities
         data, ids = align_modalities(data, self.id)

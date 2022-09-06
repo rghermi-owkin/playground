@@ -1,7 +1,5 @@
 import torch.nn
 
-import classic_algos.nn
-
 
 class BCEWithLogitsLoss(torch.nn.BCEWithLogitsLoss):
     def __init__(self, *args, **kwargs):
